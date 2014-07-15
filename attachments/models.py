@@ -3,7 +3,8 @@ from random import randint
 import os
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+# from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from settings import ATTACHMENT_STORAGE_DIR
@@ -63,8 +64,10 @@ def get_filename(filename):
     return lt(lt(filename, '\\'), '/')
 
 class Attachment(models.Model):
-    user = models.ForeignKey(User, verbose_name=_('Attachment'))
-    file = models.FileField(max_length=255, upload_to=upload_attachment_file_path)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+        verbose_name=_('Attachment'))
+    file = models.FileField(max_length=255,
+        upload_to=upload_attachment_file_path)
     org_filename = models.TextField()
     suffix = models.CharField(default = '', max_length=8, blank=True)
     is_img = models.BooleanField(default=False)
